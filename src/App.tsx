@@ -1,4 +1,5 @@
 import { useSharedText } from "./useSharedText";
+import ScribbleCanvas from "./scribbleCanvas";
 
 function App() {
   const [text, setText] = useSharedText();
@@ -6,27 +7,45 @@ function App() {
   return (
     <div
       style={{
-        padding: "2rem",
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
         fontFamily: "system-ui, sans-serif",
-        maxWidth: "600px",
-        margin: "0 auto",
+        padding: "2rem",
       }}
     >
-      <h1>Realtime Shared Text</h1>
-      <p>Open this page in two browser windows and start typing.</p>
-
-      <textarea
-        value={text}
-        onChange={(e) => setText(e.target.value)}
+      <div
         style={{
-          width: "100%",
-          height: "200px",
-          padding: "1rem",
-          fontSize: "1.1rem",
-          border: "1px solid #ccc",
-          borderRadius: "6px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "2rem",
         }}
-      />
+      >
+        {/* Text Block */}
+        <div style={{ textAlign: "center" }}>
+          <h1 style={{ marginBottom: "0.5rem" }}>Realtime Shared Text</h1>
+          <p>Open this page in two browser windows and start typing.</p>
+        </div>
+
+        {/* Textarea centered */}
+        <textarea
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
+
+        {/* Canvas centered */}
+        <div
+          style={{
+            width: "60%",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <ScribbleCanvas />
+        </div>
+      </div>
     </div>
   );
 }
