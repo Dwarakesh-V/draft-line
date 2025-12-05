@@ -15,7 +15,7 @@ export default function ScribbleCanvas() {
   // True pixel canvas size
   const [canvasSize, setCanvasSize] = useState({ width: 600, height: 450 });
 
-  // CSS-only preview size (for flicker-free resize)
+  // preview resize
   const [previewSize, setPreviewSize] = useState({ width: 600, height: 450 });
 
   // Resize state
@@ -30,9 +30,7 @@ export default function ScribbleCanvas() {
   // Base layer ImageData for instant stroke redraw
   const baseLayerRef = useRef<ImageData | null>(null);
 
-  // ----------------------------------------------------
-  // REAL CANVAS RESIZE (ONLY after user stops dragging)
-  // ----------------------------------------------------
+  // canvas resize
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -62,9 +60,7 @@ export default function ScribbleCanvas() {
     }
   }, [canvasSize]);
 
-  // ----------------------------------------------------
-  // SAVE STATE (PNG) + UPDATE BASE LAYER
-  // ----------------------------------------------------
+  // saving current canvas state
   const saveState = () => {
     const canvas = canvasRef.current;
     const ctx = ctxRef.current;
@@ -82,9 +78,7 @@ export default function ScribbleCanvas() {
     baseLayerRef.current = ctx.getImageData(0, 0, canvas.width, canvas.height);
   };
 
-  // ----------------------------------------------------
-  // RESTORE WITHOUT SCALING CONTENT
-  // ----------------------------------------------------
+  // restore
   const restore = (url: string) => {
     const canvas = canvasRef.current;
     const ctx = ctxRef.current;
@@ -108,9 +102,7 @@ export default function ScribbleCanvas() {
     };
   };
 
-  // ----------------------------------------------------
-  // DRAWING
-  // ----------------------------------------------------
+  // draw
   const startDrawing = (e: React.MouseEvent) => {
     if (isResizing) return;
 
@@ -183,9 +175,7 @@ export default function ScribbleCanvas() {
     setCurrentStroke([]);
   };
 
-  // ----------------------------------------------------
-  // UNDO / REDO
-  // ----------------------------------------------------
+  // undo/redo
   const undo = () => {
     if (historyStep > 0) {
       const newStep = historyStep - 1;
@@ -202,9 +192,7 @@ export default function ScribbleCanvas() {
     }
   };
 
-  // ----------------------------------------------------
-  // CLEAR
-  // ----------------------------------------------------
+  // clear
   const clearCanvas = () => {
     const canvas = canvasRef.current;
     const ctx = ctxRef.current;
@@ -214,9 +202,7 @@ export default function ScribbleCanvas() {
     saveState();
   };
 
-  // ----------------------------------------------------
-  // FLICKER-FREE RESIZING (CSS ONLY DURING DRAG)
-  // ----------------------------------------------------
+  // resize (no flicker)
   useEffect(() => {
     if (!isResizing) return;
 
@@ -261,9 +247,7 @@ export default function ScribbleCanvas() {
     });
   };
 
-  // ----------------------------------------------------
-  // KEYBOARD SHORTCUTS
-  // ----------------------------------------------------
+  // map functions to keyboard
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (!(e.ctrlKey || e.metaKey)) return;
@@ -282,9 +266,7 @@ export default function ScribbleCanvas() {
     return () => window.removeEventListener("keydown", handler);
   }, [historyStep, history]);
 
-  // ----------------------------------------------------
-  // RENDER
-  // ----------------------------------------------------
+  // return the element
   return (
     <div className="flex flex-col items-center gap-4 p-8">
       <div
